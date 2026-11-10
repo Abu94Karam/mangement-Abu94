@@ -56,15 +56,18 @@ span.ph{display:block}.bd{position:absolute;top:8px;right:8px;background:var(--s
 #ts{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:#1f2326;color:#fff;padding:9px 16px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}#ts.on{opacity:1}
 .ci{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #9aa2a855;padding:6px 0}
 #ft{margin-bottom:22px}#ft h2{border-right:6px solid var(--sun);padding-right:10px;margin:0 0 10px}
-.hero{background-size:cover;background-position:center;min-height:300px;display:flex;align-items:flex-end}
+.cover{display:block;width:100%;height:auto}
+.hero{padding-top:22px}
 .hero>div{width:100%}
 .hero h1{margin:0}.hero h1,.hero p{text-shadow:0 2px 8px #000a}
 .brand{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.brand img{display:none}
 .brand img{width:76px;height:76px;border-radius:16px;border:3px solid var(--sun);object-fit:cover;background:#000;flex:none}
-.hero{background-image:linear-gradient(rgba(31,35,38,.55),rgba(31,35,38,.92)),url(cover.jpg)}
+
 </style>
 </head>
 <body>
+<img class="cover" src="cover.jpg" alt="غلاف المتجر">
 <header class="hero"><div><div class="brand"><img src="icon-192.png" alt="شعار المتجر"><h1 id="sn">متجر العدد الصناعية</h1></div><p id="sd">عدد وأدوات صناعية — بيع وإصلاح</p>
  <div class="row"><button onclick="document.getElementById('q').scrollIntoView({behavior:'smooth',block:'center'})">تصفح المنتجات</button><button class="g" onclick="openRepair()">طلب إصلاح عدة</button></div>
  <div class="stat" id="stat"></div></div></header>
