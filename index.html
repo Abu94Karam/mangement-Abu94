@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -56,10 +56,15 @@ span.ph{display:block}.bd{position:absolute;top:8px;right:8px;background:var(--s
 #ts{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:#1f2326;color:#fff;padding:9px 16px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}#ts.on{opacity:1}
 .ci{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #9aa2a855;padding:6px 0}
 #ft{margin-bottom:22px}#ft h2{border-right:6px solid var(--sun);padding-right:10px;margin:0 0 10px}
+.hero{background-size:cover;background-position:center;min-height:300px;display:flex;align-items:flex-end}
+.hero>div{width:100%}
+.hero h1{margin:0}.hero h1,.hero p{text-shadow:0 2px 8px #000a}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.brand img{width:76px;height:76px;border-radius:16px;border:3px solid var(--sun);object-fit:cover;background:#000;flex:none}
 </style>
 </head>
 <body>
-<header class="hero"><div><img src="icon-192.png" alt="شعار المتجر" style="height:64px;margin-bottom:8px"><h1 id="sn">متجر العدد الصناعية</h1><p id="sd">عدد وأدوات صناعية — بيع وإصلاح</p>
+<header class="hero"><div><div class="brand"><img src="icon-192.png" alt="شعار المتجر"><h1 id="sn">متجر العدد الصناعية</h1></div><p id="sd">عدد وأدوات صناعية — بيع وإصلاح</p>
  <div class="row"><button onclick="document.getElementById('q').scrollIntoView({behavior:'smooth',block:'center'})">تصفح المنتجات</button><button class="g" onclick="openRepair()">طلب إصلاح عدة</button></div>
  <div class="stat" id="stat"></div></div></header>
 <main>
@@ -139,7 +144,7 @@ const shrink=(file,max,q)=>new Promise(r=>{const i=new Image,u=URL.createObjectU
 
 /* بيانات عامة */
 onSnapshot(collection(db,"products"),s=>{PR=s.docs.map(d=>({id:d.id,...d.data()}));setP();draw();cartBtn();openHash();if(admin)adminDraw()});
-onSnapshot(doc(db,"settings","store"),s=>{S=s.data()||{};draw();$("#sn").textContent=S.name||"متجر العدد الصناعية";$("#sd").textContent=S.tagline||"عدد وأدوات صناعية — بيع وإصلاح";
+onSnapshot(doc(db,"settings","store"),s=>{S=s.data()||{};draw();$("#sn").textContent=S.name||"متجر العدد الصناعية";$(".hero").style.backgroundImage=S.cover?`linear-gradient(rgba(31,35,38,.55),rgba(31,35,38,.92)),url("${S.cover}")`:"";
  $("#pay").textContent=S.payment||"—";$("#del").textContent=(S.delivery||"—")+(S.fee?`\nرسوم التوصيل: ${m(S.fee)}`:"");$("#ct").textContent=S.contact||"—";$("#pol").innerHTML=(S.about||S.policy)?`<details class="box" style="margin-top:14px"><summary><b>من نحن والسياسات</b></summary>${e(S.about)}\n\n${e(S.policy)}</details>`:"";
  $("#oz").innerHTML=(S.zones||"").split("\n").map(l=>l.split("=")[0].trim()).filter(Boolean).map(x=>`<option>${e(x)}</option>`).join(""); $("#opay").innerHTML=(S.payment||"نقداً").split("\n").filter(Boolean).map(x=>`<option>${e(x)}</option>`).join("")});const setP=()=>{P=PR.filter(p=>admin||!p.hidden)}; 
 
@@ -229,8 +234,8 @@ function adminDraw(){
  if(tab=="settings")t.innerHTML=`<form id="fs" style="display:grid;gap:8px;max-width:520px"><label>اسم المتجر</label><input name="name" value="${e(S.name)}"><label>وصف قصير</label><input name="tagline" value="${e(S.tagline)}">
   <label>طرق الدفع (كل طريقة في سطر)</label><textarea name="payment" rows="3">${e(S.payment)}</textarea><label>معلومات التوصيل</label><textarea name="delivery" rows="2">${e(S.delivery)}</textarea>
   <label>رسوم التوصيل</label><input name="fee" type="number" step="0.01" value="${S.fee||0}"><label>حد تنبيه المخزون</label><input name="low" type="number" value="${S.low||3}">
- <label>من نحن</label><textarea name="about" rows="3">${e(S.about)}</textarea><label>سياسة الإرجاع والضمان والخصوصية</label><textarea name="policy" rows="5">${e(S.policy)}</textarea> <label>بيانات التواصل</label><textarea name="contact" rows="2">${e(S.contact)}</textarea><label>مناطق التوصيل (سطر لكل منطقة: الاسم=الرسوم)</label><textarea name="zones" rows="4">${e(S.zones)}</textarea><label>مهلة الطلبات المعلقة (بالساعات)</label><input name="hold" type="number" value="${S.hold||48}"><button>حفظ الإعدادات</button><button type="button" class="g" onclick="backup()">تنزيل نسخة احتياطية</button><button type="button" class="g" onclick="addCp()">+ كود خصم</button><button type="button" class="g" onclick="delCp()">إيقاف كود</button></form>`;
- const fs=$("#fs");if(fs)fs.onsubmit=async ev=>{ev.preventDefault();const d=Object.fromEntries(new FormData(fs));d.fee=+d.fee;d.low=+d.low;d.hold=+d.hold;await setDoc(doc(db,"settings","store"),d);alert("تم الحفظ")};
+ <label>من نحن</label><textarea name="about" rows="3">${e(S.about)}</textarea><label>سياسة الإرجاع والضمان والخصوصية</label><textarea name="policy" rows="5">${e(S.policy)}</textarea> <label>صورة الغلاف (عريضة، مثل 1200×500)</label><input type="file" accept="image/*" onchange="coverUp(this.files[0])"><button type="button" class="g" onclick="coverDel()">حذف الغلاف</button> <label>بيانات التواصل</label><textarea name="contact" rows="2">${e(S.contact)}</textarea><label>مناطق التوصيل (سطر لكل منطقة: الاسم=الرسوم)</label><textarea name="zones" rows="4">${e(S.zones)}</textarea><label>مهلة الطلبات المعلقة (بالساعات)</label><input name="hold" type="number" value="${S.hold||48}"><button>حفظ الإعدادات</button><button type="button" class="g" onclick="backup()">تنزيل نسخة احتياطية</button><button type="button" class="g" onclick="addCp()">+ كود خصم</button><button type="button" class="g" onclick="delCp()">إيقاف كود</button></form>`;
+ const fs=$("#fs");if(fs)fs.onsubmit=async ev=>{ev.preventDefault();const d=Object.fromEntries(new FormData(fs));d.fee=+d.fee;d.low=+d.low;d.hold=+d.hold;await setDoc(doc(db,"settings","store"),d,{merge:true});alert("تم الحفظ")};
 }
 window.go=k=>{tab=k;adminDraw()};
 window.del=async(c,id)=>{if(confirm("تأكيد الحذف؟"))await deleteDoc(doc(db,c,id))};
@@ -285,7 +290,8 @@ window.rp=async id=>{const r=R.find(x=>x.id==id),c=prompt("تكلفة الإصل
 window.inv=id=>{const o=O.find(x=>x.id==id),w=open("","_blank");
  w.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>فاتورة</title><style>body{font-family:Tahoma,sans-serif;padding:24px;max-width:700px;margin:auto}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #ccc;padding:6px;text-align:right}</style></head><body><h2>${e(S.name||"المتجر")}</h2><p>رقم الطلب: <span dir="ltr">${e(o.code||o.id)}</span><br>الزبون: ${e(o.customer)} — ${e(o.phone)}<br>${o.delivery?"التوصيل: "+e(o.address)+" "+e(o.zone||""):"استلام من موقع الاستلام"}</p><table><tr><th>الصنف</th><th>الكمية</th><th>السعر</th></tr>${(o.items||[]).map(i=>`<tr><td>${e(i.name)}</td><td>${i.qty}</td><td>${m(i.price*i.qty)}</td></tr>`).join("")}</table><p>${o.discount?"الخصم: "+m(o.discount)+"<br>":""}${o.fee?"رسوم التوصيل: "+m(o.fee)+"<br>":""}<b>الإجمالي: ${m(o.total)}</b><br>المدفوع: ${m(o.paid||0)} — المتبقي: ${m(Math.max(0,o.total-(o.paid||0)))}</p><p style="margin-top:50px">توقيع المستلم: ____________</p><script>print()<\/script></body></html>`);w.document.close()};
 window.expo=()=>{const rows=[["رقم الطلب","التاريخ","الزبون","الهاتف","الأصناف","الإجمالي","المدفوع","الحالة"],...O.map(o=>[o.code||o.id,o.ts?.toMillis?new Date(o.ts.toMillis()).toLocaleDateString("en-CA"):"",o.customer,o.phone,(o.items||[]).map(i=>i.name+"×"+i.qty).join(" | "),o.total,o.paid||0,o.status])],
- b=new Blob(["\ufeff"+rows.map(r=>r.map(c=>'"'+String(c??"").replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="orders.csv";a.click()}; if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js"); /* إضافة / تعديل منتج */
+ b=new Blob(["\ufeff"+rows.map(r=>r.map(c=>'"'+String(c??"").replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="orders.csv";a.click()}; if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js"); window.coverUp=async f=>{if(!f)return;const d=await shrink(f,1200,.7);if(d.length>800000)return alert("الصورة كبيرة، اختر صورة أصغر.");await setDoc(doc(db,"settings","store"),{cover:d},{merge:true});alert("تم حفظ الغلاف")};
+window.coverDel=async()=>{await setDoc(doc(db,"settings","store"),{cover:""},{merge:true})}; /* إضافة / تعديل منتج */
 window.editP=id=>{const p=P.find(x=>x.id==id)||{};editId=id||null;imgs=p.imgs||(p.img?[p.img]:[]);img=imgs[0]||"";$("#pt").textContent=id?"تعديل منتج":"منتج جديد";
  $("#pn").value=p.name||"";$("#pc").value=p.category||"";$("#pr").value=p.price??"";$("#ps").value=p.stock??"";$("#pd").value=p.desc||"";$("#pf").checked=!!p.featured;$("#pco").value=CO[id]??"";$("#pl").value=p.low||"";$("#pi").value="";
  prv();$("#pb").value=p.brand||"";$("#po").value=p.old||"";$("#psp").value=p.specs||"";$("#ph").checked=!!p.hidden;op("mp")};
